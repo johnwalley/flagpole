@@ -14,6 +14,8 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
+import { useUser } from "../data/use-user";
+import { login, logout } from "../lib/auth";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon },
@@ -38,6 +40,9 @@ export type LayoutProps = {
 export function Layout({ children }: LayoutProps) {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { user, loading, loggedOut, mutate } = useUser();
+
+  console.log(user, loading, loggedOut);
 
   return (
     <div className="h-screen flex overflow-hidden bg-gray-900">
@@ -124,21 +129,17 @@ export function Layout({ children }: LayoutProps) {
                 </nav>
               </div>
               <div className="flex-shrink-0 flex bg-gray-700 p-4">
-                <a href="#" className="flex-shrink-0 group block">
+                <a href="#" className="flex-shrink-0 w-full group block">
                   <div className="flex items-center">
                     <div>
-                      <img
-                        className="inline-block h-10 w-10 rounded-full"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt=""
-                      />
+                      <KeyIcon className="inline-block h-9 w-9 rounded-full stroke-current text-white" />
                     </div>
-                    <div className="ml-3">
+                    <div className="ml-3 overflow-hidden">
                       <p className="text-base font-medium text-white">
-                        john.walley
+                        {user?.wallet}
                       </p>
-                      <p className="text-sm font-medium text-gray-400 group-hover:text-gray-300">
-                        View profile
+                      <p className="text-sm font-medium text-gray-400 group-hover:text-gray-300 truncate">
+                        {user?.key}
                       </p>
                     </div>
                   </div>
@@ -199,12 +200,12 @@ export function Layout({ children }: LayoutProps) {
                   <div>
                     <KeyIcon className="inline-block h-9 w-9 rounded-full stroke-current text-white" />
                   </div>
-                  <div className="ml-3">
-                    <p className="text-sm font-medium text-white">
-                      john.walley
+                  <div className="ml-3 overflow-hidden">
+                    <p className="text-base font-medium text-white">
+                      {user?.wallet}
                     </p>
-                    <p className="text-xs font-medium truncate text-gray-300 group-hover:text-gray-200">
-                      0a0ed5f704cf29041bfa320b1015b0b0c0eedb101954ecd687e513d8472a3ff6
+                    <p className="text-sm font-medium text-gray-400 group-hover:text-gray-300">
+                      {user?.key}
                     </p>
                   </div>
                 </div>
@@ -224,12 +225,38 @@ export function Layout({ children }: LayoutProps) {
           </button>
         </div>
         <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none">
-          <div className="h-full py-6">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <h1 className="text-2xl font-semibold text-gray-100">
-                {navigation.find((item) => item.href === router.pathname)
-                  ?.name ?? "Dashboard"}
-              </h1>
+          <div className="h-full">
+            <div className="border-b border-gray-800 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
+              <div className="flex-1 min-w-0">
+                <h1 className="text-2xl font-semibold text-gray-100">
+                  {navigation.find((item) => item.href === router.pathname)
+                    ?.name ?? "Dashboard"}
+                </h1>
+              </div>
+              <div className="mt-4 flex sm:mt-0 sm:ml-4">
+                {loggedOut ? (
+                  <Link href="/signin">
+                    <button
+                      type="button"
+                      className="order-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 sm:order-1 sm:ml-3"
+                    >
+                      Login
+                    </button>
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    className="order-1 ml-3 inline-flex items-center px-4 py-2 border border-gray-700 shadow-sm text-sm font-medium rounded-md text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:order-0 sm:ml-0"
+                    onClick={() => {
+                      logout();
+                      mutate({ token: null, wallet: null, key: null });
+                      router.replace("/");
+                    }}
+                  >
+                    Logout
+                  </button>
+                )}
+              </div>
             </div>
             <div className="h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               {children}

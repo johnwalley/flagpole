@@ -1,10 +1,11 @@
 import { gql, useQuery } from "@apollo/client";
 import Head from "next/head";
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { VegaDataSource } from "../lib/vega-protocol-data-source";
 import { client } from "../lib/apollo-client";
 import { Interval } from "../lib/api/vega-graphql";
 import { PennantChart } from "../components/PennantChart";
+import { ListBox, Option } from "../components/ListBox";
 
 const QUERY = gql`
   query markets {
@@ -61,7 +62,26 @@ const QUERY = gql`
 `;
 
 export default function Chart() {
-  const { data, loading, error } = useQuery(QUERY);
+  const [selectedMarket, setSelectedMarket] = useState<Option>(null!);
+  const { data, previousData, loading, error } = useQuery(QUERY, {
+    onCompleted: (data) => {
+      setSelectedMarket({
+        id: data.markets[0].tradableInstrument.instrument.code,
+        name: data.markets[0].name,
+      });
+    },
+  });
+
+  const dataSource = useMemo(
+    () =>
+      new VegaDataSource(
+        client,
+        selectedMarket.id,
+        "0a0ed5f704cf29041bfa320b1015b0b0c0eedb101954ecd687e513d8472a3ff6",
+        console.log
+      ),
+    [selectedMarket]
+  );
 
   if (loading) {
     return <h2>Loading...</h2>;
@@ -80,14 +100,18 @@ export default function Chart() {
     markPrice: market.data.markPrice,
   }));
 
-  const dataSource = new VegaDataSource(
-    client,
-    markets[0].id,
-    "0a0ed5f704cf29041bfa320b1015b0b0c0eedb101954ecd687e513d8472a3ff6",
-    console.log
-  );
+  let initialSelectedMarket = selectedMarket;
+
+  /*   if (!previousData) {
+    initialSelectedMarket = {
+      id: data.markets[0].tradableInstrument.instrument.code,
+      name: data.markets[0].name,
+    };
+  } */
 
   const interval = Interval.I1M;
+
+  console.log(markets, selectedMarket);
 
   return (
     <div className="h-full">
@@ -100,6 +124,14 @@ export default function Chart() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="py-4 h-full">
+        <ListBox
+          options={markets.map((market: any) => ({
+            id: market.code,
+            name: market.name,
+          }))}
+          selected={selectedMarket}
+          onSelectedChanged={setSelectedMarket}
+        />
         <PennantChart dataSource={dataSource} interval={interval} />
       </div>
     </div>

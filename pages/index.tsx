@@ -2,6 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import Head from "next/head";
 import React, { useState } from "react";
 import { Modal } from "../components/Modal";
+import { login } from "../lib/auth";
 
 const QUERY = gql`
   query statistics {
@@ -64,30 +65,6 @@ export default function Dashboard() {
               An unofficial client for Fairground
             </span>
           </h2>
-          <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
-            <div className="inline-flex rounded-md shadow">
-              <a
-                href="#"
-                className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700"
-                onClick={() => {
-                  setOpen(true);
-                }}
-              >
-                Login
-              </a>
-            </div>
-            <div className="ml-3 inline-flex rounded-md shadow">
-              <a
-                href="#"
-                className="inline-flex items-center justify-center px-5 py-3 border border-gray-700 text-base font-medium rounded-md text-white bg-gray-900 hover:bg-gray-800"
-                onClick={() => {
-                  setOpen(true);
-                }}
-              >
-                Create account
-              </a>
-            </div>
-          </div>
         </div>
         <div className="mt-10">
           <h3 className="text-lg leading-6 font-medium text-gray-100">
