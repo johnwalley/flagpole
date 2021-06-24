@@ -1,64 +1,21 @@
 import { gql, useQuery } from "@apollo/client";
 import Head from "next/head";
 import React from "react";
+import { OrdersTable } from "../components/OrdersTable";
 import { Table } from "../components/Table";
-
-const QUERY = gql`
-  query markets {
-    markets {
-      id
-      name
-      decimalPlaces
-      state
-      fees {
-        factors {
-          infrastructureFee
-          makerFee
-          liquidityFee
-        }
-      }
-      data {
-        market {
-          id
-        }
-        bestBidPrice
-        bestBidVolume
-        bestOfferPrice
-        bestOfferVolume
-        marketTradingMode
-        markPrice
-        openInterest
-        auctionStart
-        auctionEnd
-      }
-      tradableInstrument {
-        instrument {
-          id
-          metadata {
-            tags
-          }
-          name
-          code
-          product {
-            ... on Future {
-              maturity
-              quoteName
-              settlementAsset {
-                id
-                symbol
-                name
-                decimals
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
+import { useUser } from "../data/use-user";
+import { order, orderQuery, orderVariables } from "../lib/api/vega-graphql";
 
 export default function Orders() {
-  const { data, loading, error, subscribeToMore } = useQuery(QUERY);
+  const { user } = useUser();
+
+  const { data, loading, error, subscribeToMore } = useQuery<
+    order,
+    orderVariables
+  >(orderQuery, {
+    variables: { partyId: user?.key ?? "" },
+    skip: !user?.key,
+  });
 
   if (loading) {
     return <h2>Loading...</h2>;
@@ -69,18 +26,17 @@ export default function Orders() {
     return null;
   }
 
-  const markets = data.markets.map((market: any) => ({
-    id: market.id,
-    name: market.name,
-    code: market.tradableInstrument.instrument.code,
-    asset: market.tradableInstrument.instrument.product.settlementAsset.symbol,
-    markPrice: market.data.markPrice,
-  }));
+  const orders =
+    data?.party?.orders?.map((order) => ({
+      id: order.id,
+      market: order.market?.tradableInstrument.instrument.name ?? "",
+      price: order.price,
+    })) ?? [];
 
   return (
     <div>
       <Head>
-        <title>Markets - The fastest way to follow Vega markets</title>
+        <title>Orders - The fastest way to follow Vega markets</title>
         <meta
           name="description"
           content="The fastest way to follow Vega markets"
@@ -88,7 +44,7 @@ export default function Orders() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="py-4">
-        <Table markets={markets} />
+        <OrdersTable orders={orders} />
       </div>
     </div>
   );
