@@ -1,8 +1,7 @@
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import Head from "next/head";
 import React from "react";
 import { OrdersTable } from "../components/OrdersTable";
-import { Table } from "../components/Table";
 import { useUser } from "../data/use-user";
 import { order, orderQuery, orderVariables } from "../lib/api/vega-graphql";
 
@@ -29,8 +28,9 @@ export default function Orders() {
   const orders =
     data?.party?.orders?.map((order) => ({
       id: order.id,
-      market: order.market?.tradableInstrument.instrument.name ?? "",
       price: order.price,
+      size: order.size,
+      side: order.side,
     })) ?? [];
 
   return (

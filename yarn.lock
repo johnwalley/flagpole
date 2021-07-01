@@ -200,10 +200,10 @@
   resolved "https://registry.yarnpkg.com/@opentelemetry/context-base/-/context-base-0.14.0.tgz#c67fc20a4d891447ca1a855d7d70fa79a3533001"
   integrity sha512-sDOAZcYwynHFTbLo6n8kIbLiVF3a3BLkrmehJUyEbT9F+Smbi47kLGS2gG2g0fjBLR/Lr1InPD7kXL7FaTqEkw==
 
-"@tailwindcss/forms@^0.3.2":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@tailwindcss/forms/-/forms-0.3.2.tgz#e28c4514a53e69f725416a5a2a6d0f221683f069"
-  integrity sha512-aj2/rJsGb2whAZ/BQWHWWQRSbhH0r/l1ozOByiv+ZNjBD84GMvb5dhAyfpeasFky+EJrAwX5eaqft8NQMZFWvA==
+"@tailwindcss/forms@0.3.3":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@tailwindcss/forms/-/forms-0.3.3.tgz#a29d22668804f3dae293dcadbef1aa6315c45b64"
+  integrity sha512-U8Fi/gq4mSuaLyLtFISwuDYzPB73YzgozjxOIHsK6NXgg/IWD1FLaHbFlWmurAMyy98O+ao74ksdQefsquBV1Q==
   dependencies:
     mini-svg-data-uri "^1.2.3"
 
@@ -329,10 +329,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-15.6.0.tgz#f0ddca5a61e52627c9dcb771a6039d44694597bc"
   integrity sha512-gCYSfQpy+LYhOFTKAeE8BkyGqaxmlFxe+n4DKM6DR0wzw/HISUE/hAmkC/KT8Sw5PCJblqg062b3z9gucv3k0A==
 
-"@types/node@^12.0.0":
-  version "12.20.13"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.13.tgz#e743bae112bd779ac9650f907197dd2caa7f0364"
-  integrity sha512-1x8W5OpxPq+T85OUsHRP6BqXeosKmeXRtjoF39STcdf/UWLqUsoehstZKOi0CunhVqHG17AyZgpj20eRVooK6A==
+"@types/node@^14.0.0":
+  version "14.17.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.17.4.tgz#218712242446fc868d0e007af29a4408c7765bc0"
+  integrity sha512-8kQ3+wKGRNN0ghtEn7EGps/B8CzuBz1nXZEIGGLP2GnwbqYn4dbTs7k+VKLTq1HvZLRCIDtN3Snx1Ege8B7L5A==
 
 "@types/prop-types@*":
   version "15.7.3"
@@ -1238,6 +1238,11 @@ date-fns@^2.17.0:
   version "2.21.3"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.21.3.tgz#8f5f6889d7a96bbcc1f0ea50239b397a83357f9b"
   integrity sha512-HeYdzCaFflc1i4tGbj7JKMjM4cKGYoyxwcIIkHzNgCkX8xXDNJDZXgDDVchIWpN4eQc3lH37WarduXFZJOtxfw==
+
+date-fns@^2.22.1:
+  version "2.22.1"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.22.1.tgz#1e5af959831ebb1d82992bf67b765052d8f0efc4"
+  integrity sha512-yUFPQjrxEmIsMqlHhAhmxkuH769baF21Kk+nZwZGyrMoyLA+LugaQtC0+Tqf9CBUUULWwUJt6Q5ySI3LJDDCGg==
 
 debug@2:
   version "2.6.9"
@@ -2776,10 +2781,10 @@ pbkdf2@^3.0.3:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-pennant@0.2.31:
-  version "0.2.31"
-  resolved "https://registry.yarnpkg.com/pennant/-/pennant-0.2.31.tgz#67131615a9ec7d5e9d224a65882c31640fe8e996"
-  integrity sha512-Sev0Sc1PMcJBjNga3CXSIvVc2GzGBQJHqCXM0Q03fZnxVZk1oupdmKovoRIIK7y9MBYxFWHUum5MOuaEVQkK8Q==
+pennant@0.2.39:
+  version "0.2.39"
+  resolved "https://registry.yarnpkg.com/pennant/-/pennant-0.2.39.tgz#48961ea4362bb24dfa4945eccbc1acdd53c3aa74"
+  integrity sha512-mws0/21piNYW4nIi2j7S0sD6G/WYDoVncArYcSSg4BZNC/ZnIFgKmb2r1glgX5vH+IdjiDfRHLtJmFWLWTBqow==
   dependencies:
     "@babel/runtime" "^7.13.10"
     "@d3fc/d3fc-element" "^6.1.2"
@@ -2797,7 +2802,7 @@ pennant@0.2.31:
     "@types/d3-zoom" "^2.0.0"
     "@types/jest" "^26.0.21"
     "@types/lodash" "^4.14.168"
-    "@types/node" "^12.0.0"
+    "@types/node" "^14.0.0"
     "@types/react" "^17.0.0"
     "@types/react-dom" "^17.0.0"
     "@types/react-virtualized-auto-sizer" "^1.0.0"
@@ -3072,14 +3077,14 @@ raw-body@2.4.1:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
-react-dom@17.0.2:
-  version "17.0.2"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-17.0.2.tgz#ecffb6845e3ad8dbfcdc498f0d0a939736502c23"
-  integrity sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA==
+react-dom@18.0.0-alpha-386e8f2ea-20210624:
+  version "18.0.0-alpha-386e8f2ea-20210624"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-18.0.0-alpha-386e8f2ea-20210624.tgz#d26e8738ed1f5b6bc7f6b3d1d606cec40c53b3ea"
+  integrity sha512-tRAo8bNbMY1Ss/3z/QT7QAuu3hSgo88I+xH+rsYheXGkFBnEpzFUcrrm2X6jP9qGbCOQDSnWirqnCa4UGwZDWQ==
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
-    scheduler "^0.20.2"
+    scheduler "0.21.0-alpha-386e8f2ea-20210624"
 
 react-is@16.13.1, react-is@^16.7.0, react-is@^16.8.1:
   version "16.13.1"
@@ -3101,10 +3106,10 @@ react-virtualized-auto-sizer@^1.0.4:
   resolved "https://registry.yarnpkg.com/react-virtualized-auto-sizer/-/react-virtualized-auto-sizer-1.0.5.tgz#9eeeb8302022de56fbd7a860b08513120ce36509"
   integrity sha512-kivjYVWX15TX2IUrm8F1jaCEX8EXrpy3DD+u41WGqJ1ZqbljWpiwscV+VxOM1l7sSIM1jwi2LADjhhAJkJ9dxA==
 
-react@17.0.2:
-  version "17.0.2"
-  resolved "https://registry.yarnpkg.com/react/-/react-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"
-  integrity sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==
+react@18.0.0-alpha-386e8f2ea-20210624:
+  version "18.0.0-alpha-386e8f2ea-20210624"
+  resolved "https://registry.yarnpkg.com/react/-/react-18.0.0-alpha-386e8f2ea-20210624.tgz#a4cafe88d148b09fdb5685dec7a4e04bc0db8f35"
+  integrity sha512-dn5iSbeYgltU5+ndAyAH5r4z3Hwar2eLWB5H1Q+W36Vymq9cmpxLuG0rosj6oij6p5Of93kuK03rBHkUuWSW2w==
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
@@ -3284,10 +3289,10 @@ sass-graph@2.2.5:
     scss-tokenizer "^0.2.3"
     yargs "^13.3.2"
 
-scheduler@^0.20.2:
-  version "0.20.2"
-  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.20.2.tgz#4baee39436e34aa93b4874bddcbf0fe8b8b50e91"
-  integrity sha512-2eWfGgAqqWFGqtdMmcL5zCMK1U8KlXv8SQFGglL3CEtd0aDVDWgeF/YoCmvln55m5zSk3J/20hTaSBeSObsQDQ==
+scheduler@0.21.0-alpha-386e8f2ea-20210624:
+  version "0.21.0-alpha-386e8f2ea-20210624"
+  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.21.0-alpha-386e8f2ea-20210624.tgz#76d63c0f1a42795bbae0c91dede8311cfb85c8ed"
+  integrity sha512-9tcdr9U+MVM7hxAQTeKPxwcwG5BYVGmgYpI8nutEclZGJzB+ms/k1vBOSZHcd/ecdokGU1/DUjFX9jCoY4mWUQ==
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
@@ -3655,7 +3660,7 @@ supports-color@^8.0.0:
   dependencies:
     has-flag "^4.0.0"
 
-swr@^0.5.6:
+swr@0.5.6:
   version "0.5.6"
   resolved "https://registry.yarnpkg.com/swr/-/swr-0.5.6.tgz#70bfe9bc9d7ac49a064be4a0f4acf57982e55a31"
   integrity sha512-Bmx3L4geMZjYT5S2Z6EE6/5Cx6v1Ka0LhqZKq8d6WL2eu9y6gHWz3dUzfIK/ymZVHVfwT/EweFXiYGgfifei3w==

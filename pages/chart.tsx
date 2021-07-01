@@ -6,71 +6,25 @@ import { client } from "../lib/apollo-client";
 import { Interval } from "../lib/api/vega-graphql";
 import { PennantChart } from "../components/PennantChart";
 import { ListBox, Option } from "../components/ListBox";
-
-const QUERY = gql`
-  query markets {
-    markets {
-      id
-      name
-      decimalPlaces
-      state
-      fees {
-        factors {
-          infrastructureFee
-          makerFee
-          liquidityFee
-        }
-      }
-      data {
-        market {
-          id
-        }
-        bestBidPrice
-        bestBidVolume
-        bestOfferPrice
-        bestOfferVolume
-        marketTradingMode
-        markPrice
-        openInterest
-        auctionStart
-        auctionEnd
-      }
-      tradableInstrument {
-        instrument {
-          id
-          metadata {
-            tags
-          }
-          name
-          code
-          product {
-            ... on Future {
-              maturity
-              quoteName
-              settlementAsset {
-                id
-                symbol
-                name
-                decimals
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
+import { markets } from "../lib/api/vega-graphql/lib/market";
+import { marketsQuery } from "../lib/api/vega-graphql/queries/markets";
 
 export default function Chart() {
   const [selectedMarket, setSelectedMarket] = useState<Option>(null!);
-  const { data, previousData, loading, error } = useQuery(QUERY, {
+
+  const { data, loading, error } = useQuery<markets>(marketsQuery, {
+    fetchPolicy: "no-cache",
     onCompleted: (data) => {
-      setSelectedMarket({
-        id: data.markets[0].tradableInstrument.instrument.code,
-        name: data.markets[0].name,
-      });
+      if (data.markets) {
+        setSelectedMarket({
+          id: data.markets[0].tradableInstrument.instrument.code,
+          name: data.markets[0].name,
+        });
+      }
     },
   });
+
+  console.log(loading, data, error);
 
   const dataSource = useMemo(
     () =>
@@ -83,7 +37,7 @@ export default function Chart() {
     [selectedMarket]
   );
 
-  if (loading) {
+  if (loading || selectedMarket === null || !data || data.markets === null) {
     return <h2>Loading...</h2>;
   }
 
@@ -92,7 +46,9 @@ export default function Chart() {
     return null;
   }
 
-  const markets = data.markets.map((market: any) => ({
+  console.log(data.markets);
+
+  const marketList = data.markets.map((market: any) => ({
     id: market.id,
     name: market.name,
     code: market.tradableInstrument.instrument.code,
@@ -111,7 +67,7 @@ export default function Chart() {
 
   const interval = Interval.I1M;
 
-  console.log(markets, selectedMarket);
+  console.log(marketList, selectedMarket);
 
   return (
     <div className="h-full">
@@ -125,14 +81,17 @@ export default function Chart() {
       </Head>
       <div className="py-4 h-full">
         <ListBox
-          options={markets.map((market: any) => ({
+          label="Market"
+          options={marketList.map((market) => ({
             id: market.code,
             name: market.name,
           }))}
           selected={selectedMarket}
           onSelectedChanged={setSelectedMarket}
         />
-        <PennantChart dataSource={dataSource} interval={interval} />
+        <div className="h-full">
+          <PennantChart dataSource={dataSource} interval={interval} />
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 export * from "./lib/CandleDetails";
-export * from "./lib/candlesQuery";
+export * from "./queries/candlesQuery";
 export * from "./lib/globalTypes";
 export * from "./lib/marketDetail";
 export * from "./lib/order";

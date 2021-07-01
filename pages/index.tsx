@@ -1,42 +1,18 @@
 import { gql, useQuery } from "@apollo/client";
+import { format, formatDistance } from "date-fns";
 import Head from "next/head";
 import React, { useState } from "react";
 import { Modal } from "../components/Modal";
-import { login } from "../lib/auth";
-
-const QUERY = gql`
-  query statistics {
-    statistics {
-      blockHeight
-      backlogLength
-      tradesPerSecond
-      averageOrdersPerBlock
-      ordersPerSecond
-      txPerBlock
-      blockDuration
-      status
-      totalPeers
-      totalOrders
-      totalTrades
-      vegaTime
-      appVersion
-      chainVersion
-      upTime
-    }
-    networkParameters {
-      key
-      value
-    }
-  }
-`;
+import { statistics } from "../lib/api/vega-graphql/lib/statistics";
+import { networkStatsQuery } from "../lib/api/vega-graphql/queries/statistics";
 
 export default function Dashboard() {
   const [open, setOpen] = useState(false);
-  const { data, loading, error } = useQuery(QUERY, {
+  const { data, loading, error } = useQuery<statistics>(networkStatsQuery, {
     pollInterval: 4000,
   });
 
-  if (loading) {
+  if (loading || !data) {
     return <h2>Loading...</h2>;
   }
 
@@ -83,6 +59,61 @@ export default function Dashboard() {
                 name: "Trades per second",
                 stat: data.statistics.tradesPerSecond,
               },
+              {
+                name: "Average orders per block",
+                stat: data.statistics.averageOrdersPerBlock,
+              },
+              {
+                name: "Orders per second",
+                stat: data.statistics.ordersPerSecond,
+              },
+              {
+                name: "Transactions per block",
+                stat: data.statistics.txPerBlock,
+              },
+              {
+                name: "Block duration time",
+                stat: `${Math.floor(data.statistics.blockDuration / 1e6)} ms`,
+              },
+              {
+                name: "Status",
+                stat: data.statistics.status,
+              },
+              {
+                name: "Validator nodes",
+                stat: data.statistics.totalPeers,
+              },
+              {
+                name: "Total orders",
+                stat: new Intl.NumberFormat().format(
+                  data.statistics.totalOrders
+                ),
+              },
+              {
+                name: "Total trades",
+                stat: new Intl.NumberFormat().format(
+                  data.statistics.totalTrades
+                ),
+              },
+              {
+                name: "Vega time",
+                stat: format(new Date(data.statistics.vegaTime), "HH:mm:ss"),
+              },
+              {
+                name: "App version",
+                stat: data.statistics.appVersion,
+              },
+              {
+                name: "Chain version",
+                stat: data.statistics.chainVersion,
+              },
+              {
+                name: "Up time",
+                stat: formatDistance(
+                  new Date(data.statistics.upTime),
+                  new Date(data.statistics.vegaTime)
+                ),
+              },
             ].map((item) => (
               <div
                 key={item.name}
@@ -91,7 +122,7 @@ export default function Dashboard() {
                 <dt className="text-sm font-medium text-gray-400 truncate">
                   {item.name}
                 </dt>
-                <dd className="mt-1 text-3xl font-semibold text-gray-100">
+                <dd className="mt-1 text-3xl font-semibold text-gray-100 overflow-ellipsis whitespace-nowrap overflow-hidden">
                   {item.stat}
                 </dd>
               </div>

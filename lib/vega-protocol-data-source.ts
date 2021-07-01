@@ -183,6 +183,8 @@ export class VegaDataSource implements DataSource {
           .filter((d): d is CandleDetails => d !== null)
           .map((d) => parseCandle(d, decimalPlaces));
 
+        console.log(candles);
+
         return candles;
       } else {
         return [];

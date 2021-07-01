@@ -42,8 +42,6 @@ export function Layout({ children }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, loading, loggedOut, mutate } = useUser();
 
-  console.log(user, loading, loggedOut);
-
   return (
     <div className="h-screen flex overflow-hidden bg-gray-900">
       <Transition.Root show={sidebarOpen} as={Fragment}>

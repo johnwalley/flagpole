@@ -2,67 +2,15 @@ import { gql, useQuery } from "@apollo/client";
 import Head from "next/head";
 import React from "react";
 import { Table } from "../components/Table";
-
-const QUERY = gql`
-  query markets {
-    markets {
-      id
-      name
-      decimalPlaces
-      state
-      fees {
-        factors {
-          infrastructureFee
-          makerFee
-          liquidityFee
-        }
-      }
-      data {
-        market {
-          id
-        }
-        bestBidPrice
-        bestBidVolume
-        bestOfferPrice
-        bestOfferVolume
-        marketTradingMode
-        markPrice
-        openInterest
-        auctionStart
-        auctionEnd
-      }
-      tradableInstrument {
-        instrument {
-          id
-          metadata {
-            tags
-          }
-          name
-          code
-          product {
-            ... on Future {
-              maturity
-              quoteName
-              settlementAsset {
-                id
-                symbol
-                name
-                decimals
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
+import { markets } from "../lib/api/vega-graphql/lib/market";
+import { marketsQuery } from "../lib/api/vega-graphql/queries/markets";
 
 export default function Markets() {
-  const { data, loading, error } = useQuery(QUERY, {
+  const { data, loading, error } = useQuery<markets>(marketsQuery, {
     pollInterval: 4000,
   });
 
-  if (loading) {
+  if (loading || !data || !data.markets) {
     return <h2>Loading...</h2>;
   }
 
@@ -71,7 +19,7 @@ export default function Markets() {
     return null;
   }
 
-  const markets = data.markets.map((market: any) => ({
+  const marketsList = data.markets.map((market) => ({
     id: market.id,
     name: market.name,
     code: market.tradableInstrument.instrument.code,
@@ -90,7 +38,7 @@ export default function Markets() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="py-4">
-        <Table markets={markets} />
+        <Table markets={marketsList} />
       </div>
     </div>
   );

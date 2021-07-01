@@ -1,4 +1,4 @@
-import { Interval } from "./globalTypes";
+import { Interval } from "../lib/globalTypes";
 
 export interface candlesQuery_market_tradableInstrument_instrument {
   __typename: "Instrument";

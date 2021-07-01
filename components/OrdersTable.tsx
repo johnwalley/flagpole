@@ -1,8 +1,9 @@
 export type OrdersTableProps = {
   orders: {
     id: string;
-    market: string;
     price: string;
+    size: string;
+    side: string;
   }[];
 };
 
@@ -19,19 +20,19 @@ export function OrdersTable({ orders }: OrdersTableProps) {
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
                   >
-                    Name
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
-                  >
-                    Market
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
-                  >
                     Price
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                  >
+                    Size
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
+                  >
+                    Side
                   </th>
                 </tr>
               </thead>
@@ -44,13 +45,13 @@ export function OrdersTable({ orders }: OrdersTableProps) {
                     }
                   >
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100">
-                      {order.market}
+                      {order.price}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm ordinal slashed-zero tabular-nums text-gray-300">
-                      {new Intl.NumberFormat("en-US", {
-                        maximumFractionDigits: 5,
-                        minimumFractionDigits: 5,
-                      }).format(parseInt(order.price, 10) / Math.pow(10, 5))}
+                      {order.size}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100">
+                      {order.side}
                     </td>
                   </tr>
                 ))}
