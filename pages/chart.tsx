@@ -17,14 +17,12 @@ export default function Chart() {
     onCompleted: (data) => {
       if (data.markets) {
         setSelectedMarket({
-          id: data.markets[0].tradableInstrument.instrument.code,
+          id: data.markets[0].id,
           name: data.markets[0].name,
         });
       }
     },
   });
-
-  console.log(loading, data, error);
 
   const dataSource = useMemo(
     () =>
@@ -46,8 +44,6 @@ export default function Chart() {
     return null;
   }
 
-  console.log(data.markets);
-
   const marketList = data.markets.map((market: any) => ({
     id: market.id,
     name: market.name,
@@ -67,8 +63,6 @@ export default function Chart() {
 
   const interval = Interval.I1M;
 
-  console.log(marketList, selectedMarket);
-
   return (
     <div className="h-full">
       <Head>
@@ -83,13 +77,13 @@ export default function Chart() {
         <ListBox
           label="Market"
           options={marketList.map((market) => ({
-            id: market.code,
+            id: market.id,
             name: market.name,
           }))}
           selected={selectedMarket}
           onSelectedChanged={setSelectedMarket}
         />
-        <div className="h-full">
+        <div className="h-full mt-6">
           <PennantChart dataSource={dataSource} interval={interval} />
         </div>
       </div>
