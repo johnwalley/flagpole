@@ -1,9 +1,9 @@
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import Head from "next/head";
 import React from "react";
-import { Table } from "../components/Table";
-import { markets } from "../lib/api/vega-graphql/lib/market";
-import { marketsQuery } from "../lib/api/vega-graphql/queries/markets";
+import { Table } from "../../components/Table";
+import { markets } from "../../lib/api/vega-graphql/lib/market";
+import { marketsQuery } from "../../lib/api/vega-graphql/queries/markets";
 
 export default function Markets() {
   const { data, loading, error } = useQuery<markets>(marketsQuery, {

@@ -1,15 +1,21 @@
 import { gql, useQuery } from "@apollo/client";
 import Head from "next/head";
 import React, { useMemo, useState } from "react";
-import { VegaDataSource } from "../lib/vega-protocol-data-source";
-import { client } from "../lib/apollo-client";
-import { Interval } from "../lib/api/vega-graphql";
-import { PennantChart } from "../components/PennantChart";
-import { ListBox, Option } from "../components/ListBox";
-import { markets } from "../lib/api/vega-graphql/lib/market";
-import { marketsQuery } from "../lib/api/vega-graphql/queries/markets";
+import { VegaDataSource } from "../../lib/vega-protocol-data-source";
+import { client } from "../../lib/apollo-client";
+import { Interval } from "../../lib/api/vega-graphql";
+import { PennantChart } from "../../components/PennantChart";
+import { ListBox, Option } from "../../components/ListBox";
+import { markets } from "../../lib/api/vega-graphql/lib/market";
+import { marketsQuery } from "../../lib/api/vega-graphql/queries/markets";
+import { useRouter } from "next/router";
 
 export default function Chart() {
+  const router = useRouter();
+  const { id } = router.query;
+
+  console.log(id);
+
   const [selectedMarket, setSelectedMarket] = useState<Option>(null!);
 
   const { data, loading, error } = useQuery<markets>(marketsQuery, {

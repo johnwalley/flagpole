@@ -227,8 +227,9 @@ export function Layout({ children }: LayoutProps) {
             <div className="border-b border-gray-800 px-4 py-4 sm:flex sm:items-center sm:justify-between sm:px-6 lg:px-8">
               <div className="flex-1 min-w-0">
                 <h1 className="text-2xl font-semibold text-gray-100">
-                  {navigation.find((item) => item.href === router.pathname)
-                    ?.name ?? "Dashboard"}
+                  {navigation.find((item) =>
+                    router.pathname.includes(item.href)
+                  )?.name ?? "Dashboard"}
                 </h1>
               </div>
               <div className="mt-4 flex sm:mt-0 sm:ml-4">

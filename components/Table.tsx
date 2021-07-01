@@ -1,3 +1,17 @@
+import Link from "next/link";
+import React from "react";
+import {
+  ChartBarIcon,
+  ClipboardListIcon,
+  FlagIcon,
+  HomeIcon,
+  LibraryIcon,
+  KeyIcon,
+  MenuIcon,
+  TrendingUpIcon,
+  XIcon,
+} from "@heroicons/react/outline";
+
 export type TableProps = {
   markets: {
     id: string;
@@ -41,6 +55,9 @@ export function Table({ markets }: TableProps) {
                   >
                     Last price
                   </th>
+                  <th scope="col" className="relative px-6 py-3">
+                    <span className="sr-only">Chart</span>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -52,7 +69,7 @@ export function Table({ markets }: TableProps) {
                     }
                   >
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100">
-                      {market.name}
+                      <Link href={`/markets/${market.id}`}>{market.name}</Link>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                       {market.code}
@@ -67,6 +84,30 @@ export function Table({ markets }: TableProps) {
                       }).format(
                         parseInt(market.markPrice, 10) / Math.pow(10, 5)
                       )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <Link href={`/markets/${market.id}`}>
+                        <a
+                          href="#"
+                          className="text-gray-400 hover:text-grey-100"
+                        >
+                          <LibraryIcon
+                            className="h-8 w-auto stroke-current text-grey-600"
+                            aria-hidden="true"
+                          />
+                        </a>
+                      </Link>
+                      <Link href={`/chart/${market.id}`}>
+                        <a
+                          href="#"
+                          className="text-gray-400 hover:text-grey-100"
+                        >
+                          <ChartBarIcon
+                            className="h-8 w-auto stroke-current text-grey-600"
+                            aria-hidden="true"
+                          />
+                        </a>
+                      </Link>
                     </td>
                   </tr>
                 ))}
