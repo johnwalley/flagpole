@@ -12,11 +12,12 @@
     "@headlessui/react": "1.2.0",
     "@heroicons/react": "1.0.1",
     "@tailwindcss/forms": "0.3.3",
+    "allotment": "1.11.1",
     "bignumber.js": "9.0.1",
     "date-fns": "^2.22.1",
     "graphql": "15.5.0",
     "next": "10.2.2",
-    "pennant": "0.2.39",
+    "pennant": "0.3.2",
     "react": "18.0.0-alpha-386e8f2ea-20210624",
     "react-dom": "18.0.0-alpha-386e8f2ea-20210624",
     "swr": "0.5.6"
