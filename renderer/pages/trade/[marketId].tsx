@@ -57,6 +57,8 @@ function Trade() {
     return <p>Loading</p>;
   }
 
+  console.log(chart);
+
   return (
     <React.Fragment>
       <Head>
@@ -73,7 +75,7 @@ function Trade() {
         <Menu as="div" className="relative inline-block text-left">
           <div>
             <Menu.Button className="inline-flex w-full justify-center rounded-md border border-gray-700 bg-black px-4 py-2 text-sm font-medium text-gray-300 shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900">
-              {startCase(chart as string) ?? "Candlestick"}
+              {startCase((chart as string) ?? "Candlestick")}
               <ChevronDownIcon
                 className="-mr-1 ml-2 h-5 w-5"
                 aria-hidden="true"
@@ -129,7 +131,7 @@ function Trade() {
           </Transition>
         </Menu>
 
-        <div className="h-full" style={{ height: "300px" }}>
+        <div className="h-full" style={{ height: "500px" }}>
           {chart === "depth" ? (
             <DepthChart
               data={{

@@ -13,6 +13,7 @@
   "dependencies": {
     "@headlessui/react": "^1.7.2",
     "@heroicons/react": "^2.0.11",
+    "@tanstack/react-table": "^8.5.13",
     "allotment": "^1.17.0",
     "electron-serve": "^1.1.0",
     "electron-store": "^8.1.0",

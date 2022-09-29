@@ -1,9 +1,35 @@
-import React, { ReactElement, useMemo } from "react";
+import React, { ReactElement, useMemo, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import useSWR from "swr";
 import Layout from "../components/layout";
 import { sortBy } from "lodash";
+import {
+  Column,
+  Table as ReactTable,
+  PaginationState,
+  useReactTable,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  ColumnDef,
+  OnChangeFn,
+  createColumnHelper,
+  flexRender,
+  getSortedRowModel,
+  SortingState,
+} from "@tanstack/react-table";
+
+type Market = {
+  id: string;
+  name: string;
+  fullName: string;
+  price: number;
+  symbol: string;
+  dayChange: number;
+  volume: number;
+  marketCap: number;
+};
 
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -27,15 +53,71 @@ const marketCapFormatter = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 2,
 });
 
+const columnHelper = createColumnHelper<Market>();
+
+const columns = [
+  columnHelper.accessor("name", {
+    header: "Name",
+    size: 220,
+    sortingFn: "text",
+    cell: (info) => (
+      <div className="flex flex-row items-center">
+        <div className="font-medium text-gray-900 dark:text-white">
+          {info.row.original.name}
+        </div>
+        <div className="ml-4 text-gray-500 max-w-[110px] whitespace-normal">
+          {info.row.original.fullName}
+        </div>
+      </div>
+    ),
+  }),
+  columnHelper.accessor("price", {
+    header: "Price",
+    cell: (info) => currencyFormatter.format(info.getValue()),
+  }),
+  columnHelper.accessor("dayChange", {
+    header: "Change",
+    cell: (info) => (
+      <span
+        className={`${info.getValue() < 0 ? "text-red-500" : "text-green-500"}`}
+      >
+        {percentageFormatter.format(info.getValue() / 100)}
+      </span>
+    ),
+  }),
+  columnHelper.accessor("volume", {
+    header: "Volume",
+    cell: (info) => volumeFormatter.format(info.getValue()),
+  }),
+  columnHelper.accessor("marketCap", {
+    header: "Market cap",
+    cell: (info) => marketCapFormatter.format(info.getValue()),
+  }),
+];
+
 function Markets() {
-  const { data: list, error } = useSWR(
+  const { data: list, error } = useSWR<{ data: Market[] }>(
     "https://www.binance.com/bapi/composite/v1/public/marketing/symbol/list"
   );
+
+  const [sorting, setSorting] = useState<SortingState>([]);
 
   const sortedData = useMemo(
     () => (list ? sortBy(list.data, "rank") : []),
     [list]
   );
+
+  const table = useReactTable<Market>({
+    data: sortedData,
+    columns,
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+  });
 
   if (!list) {
     return <p>Loading</p>;
@@ -55,96 +137,133 @@ function Markets() {
             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
               <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
                 <table className="min-w-full divide-y divide-gray-300">
-                  <thead className="bg-gray-50 dark:bg-gray-900">
-                    <tr>
-                      <th
-                        scope="col"
-                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 dark:text-white sm:pl-6"
-                      >
-                        Name
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white"
-                      >
-                        Price
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white"
-                      >
-                        Change
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white"
-                      >
-                        Volume
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white"
-                      >
-                        Market cap
-                      </th>
-                      <th
-                        scope="col"
-                        className="relative py-3.5 pl-3 pr-4 sm:pr-6"
-                      >
-                        <span className="sr-only">Trade</span>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white dark:bg-gray-800">
-                    {sortedData.slice(0, 10).map((market, marketIndex) => (
-                      <Link href={`/trade/${market.symbol}`}>
-                        <tr
-                          key={market.id}
-                          className={`hover:bg-white dark:hover:bg-black ${
-                            marketIndex % 2 === 0 ? undefined : "bg-gray-900"
-                          } cursor-pointer`}
-                        >
-                          <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 dark:text-white sm:pl-6">
-                            <div className="flex flex-row items-center">
-                              <div className="font-medium text-gray-900 dark:text-white">
-                                {market.name}
-                              </div>
-                              <div className="ml-4 text-gray-500">
-                                {market.fullName}
-                              </div>
-                            </div>
-                          </td>
-                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-white">
-                            {currencyFormatter.format(market.price)}
-                          </td>
-                          <td
-                            className={`whitespace-nowrap px-3 py-4 text-sm ${
-                              market.dayChange < 0
-                                ? "text-red-500"
-                                : "text-green-500"
-                            }`}
+                  <thead className="bg-gray-50 dark:bg-black">
+                    {table.getHeaderGroups().map((headerGroup) => (
+                      <tr key={headerGroup.id}>
+                        {headerGroup.headers.map((header) => (
+                          <th
+                            key={header.id}
+                            scope="col"
+                            className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 dark:text-white sm:pl-6"
+                            style={{
+                              width: header.getSize(),
+                              flex: `${header.getSize()} 1 0%`,
+                            }}
                           >
-                            {percentageFormatter.format(market.dayChange / 100)}
-                          </td>
-                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-white">
-                            {volumeFormatter.format(market.volume)}
-                          </td>
-                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-white">
-                            {marketCapFormatter.format(market.marketCap)}
-                          </td>
-                          <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                            <Link href={`/trade/${market.symbol}`}>
-                              <a className="text-cyan-600 hover:text-cyan-900">
-                                Trade
-                                <span className="sr-only">, {market.name}</span>
-                              </a>
-                            </Link>
-                          </td>
+                            {header.isPlaceholder ? null : (
+                              <div
+                                {...{
+                                  className: header.column.getCanSort()
+                                    ? "cursor-pointer select-none"
+                                    : "",
+                                  onClick:
+                                    header.column.getToggleSortingHandler(),
+                                }}
+                              >
+                                {flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext()
+                                )}
+                              </div>
+                            )}
+                          </th>
+                        ))}
+                      </tr>
+                    ))}
+                  </thead>
+
+                  <tbody className="divide-y divide-gray-600 bg-white dark:bg-gray-900">
+                    {table.getRowModel().rows.map((row) => (
+                      <Link key={row.id} href={`/trade/${row.original.symbol}`}>
+                        <tr
+                          className={`hover:bg-white dark:hover:bg-black cursor-pointer h-[64px]`}
+                        >
+                          {row.getVisibleCells().map((cell) => (
+                            <td
+                              key={cell.id}
+                              className="whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-gray-900 dark:text-white sm:pl-6"
+                            >
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext()
+                              )}
+                            </td>
+                          ))}
                         </tr>
                       </Link>
                     ))}
                   </tbody>
                 </table>
+                <div className="h-2" />
+                <div className="flex items-center gap-2 dark:text-white">
+                  <button
+                    className="border rounded p-1"
+                    onClick={() => table.setPageIndex(0)}
+                    disabled={!table.getCanPreviousPage()}
+                  >
+                    {"<<"}
+                  </button>
+                  <button
+                    className="border rounded p-1"
+                    onClick={() => table.previousPage()}
+                    disabled={!table.getCanPreviousPage()}
+                  >
+                    {"<"}
+                  </button>
+                  <button
+                    className="border rounded p-1"
+                    onClick={() => table.nextPage()}
+                    disabled={!table.getCanNextPage()}
+                  >
+                    {">"}
+                  </button>
+                  <button
+                    className="border rounded p-1"
+                    onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                    disabled={!table.getCanNextPage()}
+                  >
+                    {">>"}
+                  </button>
+                  <span className="flex items-center gap-1">
+                    <div>Page</div>
+                    <strong>
+                      {table.getState().pagination.pageIndex + 1} of{" "}
+                      {table.getPageCount()}
+                    </strong>
+                  </span>
+                  <span className="flex items-center gap-1">
+                    | Go to page:
+                    <input
+                      type="number"
+                      defaultValue={table.getState().pagination.pageIndex + 1}
+                      onChange={(e) => {
+                        const page = e.target.value
+                          ? Number(e.target.value) - 1
+                          : 0;
+                        table.setPageIndex(page);
+                      }}
+                      className="border p-1 rounded w-16"
+                    />
+                  </span>
+                  <select
+                    value={table.getState().pagination.pageSize}
+                    onChange={(e) => {
+                      table.setPageSize(Number(e.target.value));
+                    }}
+                  >
+                    {[10, 20, 30, 40, 50].map((pageSize) => (
+                      <option key={pageSize} value={pageSize}>
+                        Show {pageSize}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="dark:text-white">
+                  {table.getRowModel().rows.length} Rows
+                </div>
+                <pre className="dark:text-white">
+                  {JSON.stringify(table.getState().pagination, null, 2)}
+                </pre>
               </div>
             </div>
           </div>

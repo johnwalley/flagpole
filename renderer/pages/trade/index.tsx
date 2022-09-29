@@ -37,7 +37,7 @@ function Trade() {
         <title>Trade | Flagpole</title>
       </Head>
       <div className="h-full dark:text-white">
-        <div>No markets available</div>
+        <span>No markets available</span>
       </div>
     </React.Fragment>
   );
