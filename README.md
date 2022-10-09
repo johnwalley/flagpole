@@ -1,38 +1,27 @@
-<p align="center"><img src="https://i.imgur.com/a9QWW0v.png"></p>
+# Next.js + Tailwind CSS Example
 
-## Usage
+This example shows how to use [Tailwind CSS](https://tailwindcss.com/) [(v3.0)](https://tailwindcss.com/blog/tailwindcss-v3) with Next.js. It follows the steps outlined in the official [Tailwind docs](https://tailwindcss.com/docs/guides/nextjs).
 
-### Create an App
+## Deploy your own
 
-```
-# with npx
-$ npx create-nextron-app my-app --example with-typescript-tailwindcss
+Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example) or preview live with [StackBlitz](https://stackblitz.com/github/vercel/next.js/tree/canary/examples/with-tailwindcss)
 
-# with yarn
-$ yarn create nextron-app my-app --example with-typescript-tailwindcss
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-tailwindcss&project-name=with-tailwindcss&repository-name=with-tailwindcss)
 
-# with pnpx
-$ pnpx create-nextron-app my-app --example with-typescript-tailwindcss
-```
+## How to use
 
-### Install Dependencies
+Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init), [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/), or [pnpm](https://pnpm.io) to bootstrap the example:
 
-```
-$ cd my-app
-
-# using yarn or npm
-$ yarn (or `npm install`)
-
-# using pnpm
-$ pnpm install --shamefully-hoist
+```bash
+npx create-next-app --example with-tailwindcss with-tailwindcss-app
 ```
 
-### Use it
-
+```bash
+yarn create next-app --example with-tailwindcss with-tailwindcss-app
 ```
-# development mode
-$ yarn dev (or `npm run dev` or `pnpm run dev`)
 
-# production build
-$ yarn build (or `npm run build` or `pnpm run build`)
+```bash
+pnpm create next-app --example with-tailwindcss with-tailwindcss-app
 ```
+
+Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
