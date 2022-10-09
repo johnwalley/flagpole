@@ -25,7 +25,7 @@ const MyLink = forwardRef<any, any>((props, ref) => {
   );
 });
 
-function classNames(...classes) {
+function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
 }
 

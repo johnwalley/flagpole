@@ -51,7 +51,9 @@ function Markets() {
   const sortedData = useMemo(
     () =>
       products
-        ? products.data.filter((product) => popularPairs.includes(product.s))
+        ? products.data.filter((product: any) =>
+            popularPairs.includes(product.s)
+          )
         : [],
     [products]
   );
@@ -95,7 +97,7 @@ function Markets() {
         role="list"
         className="grid grid-cols-1 gap-6 sm:grid-cols-3 lg:grid-cols-5"
       >
-        {sortedData.map((product) => (
+        {sortedData.map((product: any) => (
           <Link key={product.s} href={`trade/${product.s}`}>
             <a>
               <li className="col-span-1 divide-yrounded-lg bg-white dark:bg-black shadow">
