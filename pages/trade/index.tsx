@@ -21,10 +21,6 @@ function Trade() {
     [list]
   );
 
-  if (!list) {
-    return <p>Loading</p>;
-  }
-
   useEffect(() => {
     if (list && sortedData.length > 0) {
       router.replace(`/trade/${sortedData[0].symbol}`);

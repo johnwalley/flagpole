@@ -3,7 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import useSWR from "swr";
 import { useRouter } from "next/router";
-import { Chart, DepthChart, Interval } from "pennant";
+import { Chart, DepthChart, Interval, intervalLabels } from "pennant";
 import Allotment from "allotment";
 import "allotment/dist/style.css";
 import "pennant/dist/style.css";
@@ -32,15 +32,27 @@ function classNames(...classes: any[]) {
 function Trade() {
   const router = useRouter();
 
-  const { chart } = router.query;
+  const { chart, interval, marketId } = router.query;
 
-  const dataSource = useMemo(() => new BinanceDataSource(), []);
+  const dataSource = useMemo(
+    () => new BinanceDataSource(marketId as string),
+    [marketId]
+  );
 
-  const { marketId } = router.query;
+  let intervalEnum: Interval = Interval.I1D;
+  switch (interval) {
+    case intervalLabels[Interval.I5M]:
+      intervalEnum = Interval.I5M;
+      break;
+    case intervalLabels[Interval.I1H]:
+      intervalEnum = Interval.I1H;
+      break;
+  }
 
   const { data: depth, error: depthError } = useSWR(
-    `https://www.binance.com/api/v3/depth?symbol=${marketId}&limit=1000
-  `,
+    marketId
+      ? `https://www.binance.com/api/v3/depth?symbol=${marketId}&limit=1000`
+      : null,
     {
       refreshInterval: 3000,
     }
@@ -57,7 +69,7 @@ function Trade() {
     return <p>Loading</p>;
   }
 
-  console.log(chart);
+  console.log(intervalEnum);
 
   return (
     <React.Fragment>
@@ -82,7 +94,6 @@ function Trade() {
               />
             </Menu.Button>
           </div>
-
           <Transition
             as={Fragment}
             enter="transition ease-out duration-100"
@@ -96,7 +107,9 @@ function Trade() {
               <div className="py-1">
                 <Menu.Item>
                   {({ active }) => (
-                    <MyLink href={`/trade/${marketId}?chart=candlestick`}>
+                    <MyLink
+                      href={`/trade/${marketId}?chart=candlestick&interval=${intervalLabels[intervalEnum]}`}
+                    >
                       <a
                         className={classNames(
                           active
@@ -112,7 +125,9 @@ function Trade() {
                 </Menu.Item>
                 <Menu.Item>
                   {({ active }) => (
-                    <MyLink href={`/trade/${marketId}?chart=depth`}>
+                    <MyLink
+                      href={`/trade/${marketId}?chart=depth&interval=${intervalLabels[intervalEnum]}`}
+                    >
                       <a
                         className={classNames(
                           active
@@ -130,7 +145,73 @@ function Trade() {
             </Menu.Items>
           </Transition>
         </Menu>
-
+        <Menu as="div" className="relative inline-block text-left">
+          <div>
+            <Menu.Button className="inline-flex w-full justify-center rounded-md border border-gray-700 bg-black px-4 py-2 text-sm font-medium text-gray-300 shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900">
+              {startCase(
+                intervalLabels[intervalEnum] ?? intervalLabels[Interval.I5M]
+              )}
+              <ChevronDownIcon
+                className="-mr-1 ml-2 h-5 w-5"
+                aria-hidden="true"
+              />
+            </Menu.Button>
+          </div>
+          <Transition
+            as={Fragment}
+            enter="transition ease-out duration-100"
+            enterFrom="transform opacity-0 scale-95"
+            enterTo="transform opacity-100 scale-100"
+            leave="transition ease-in duration-75"
+            leaveFrom="transform opacity-100 scale-100"
+            leaveTo="transform opacity-0 scale-95"
+          >
+            <Menu.Items className="absolute left-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <div className="py-1">
+                <Menu.Item>
+                  {({ active }) => (
+                    <MyLink
+                      href={`/trade/${marketId}?chart=${chart}&interval=${
+                        intervalLabels[Interval.I5M]
+                      }`}
+                    >
+                      <a
+                        className={classNames(
+                          active
+                            ? "bg-gray-100 text-gray-900"
+                            : "text-gray-700",
+                          "block px-4 py-2 text-sm"
+                        )}
+                      >
+                        {intervalLabels[Interval.I5M]}
+                      </a>
+                    </MyLink>
+                  )}
+                </Menu.Item>
+                <Menu.Item>
+                  {({ active }) => (
+                    <MyLink
+                      href={`/trade/${marketId}?chart=${chart}&interval=${
+                        intervalLabels[Interval.I1H]
+                      }`}
+                    >
+                      <a
+                        className={classNames(
+                          active
+                            ? "bg-gray-100 text-gray-900"
+                            : "text-gray-700",
+                          "block px-4 py-2 text-sm"
+                        )}
+                      >
+                        {intervalLabels[Interval.I1H]}
+                      </a>
+                    </MyLink>
+                  )}
+                </Menu.Item>
+              </div>
+            </Menu.Items>
+          </Transition>
+        </Menu>
         <div className="h-full" style={{ height: "500px" }}>
           {chart === "depth" ? (
             <DepthChart
@@ -154,7 +235,7 @@ function Trade() {
               }}
             />
           ) : (
-            <Chart dataSource={dataSource} interval={Interval.I1D} />
+            <Chart dataSource={dataSource} interval={intervalEnum} />
           )}
         </div>
       </div>
