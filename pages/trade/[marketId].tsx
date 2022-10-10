@@ -69,8 +69,6 @@ function Trade() {
     return <p>Loading</p>;
   }
 
-  console.log(intervalEnum);
-
   return (
     <React.Fragment>
       <Head>
