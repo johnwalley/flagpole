@@ -37,7 +37,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <body class="h-full">
         ```
       */}
-      <div className="min-h-full">
+      <div className="h-full">
         <Disclosure as="nav" className="bg-gray-800">
           {({ open }) => (
             <>
@@ -218,9 +218,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </Disclosure>
 
         <main className="h-full">
-          <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+          <div className="h-full">
             {/* Replace with your content */}
-            <div className="px-4 py-4 sm:px-0">{children}</div>
+            <div className="h-full px-4 sm:px-0">{children}</div>
             {/* /End replace */}
           </div>
         </main>
