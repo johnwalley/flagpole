@@ -20,7 +20,7 @@ import {
   SortingState,
 } from "@tanstack/react-table";
 
-type Market = {
+export type Market = {
   id: string;
   name: string;
   fullName: string;
